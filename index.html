@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>CRUD</title>
+<link rel="stylesheet" href="cssFile.css">
+</head>
+
+<body>
+  
+<div id="login-box">
+  <div class="left">
+    <h1>Sign up</h1>
+    
+    <input type="text" id="username" name="username" placeholder="Username" />
+    <input type="text" id="email" name="email" placeholder="E-mail" />
+    <input type="password" id="password" name="password" placeholder="Password" />
+    <input type="password" id="password2" name="password2" placeholder="Retype password" />
+    
+    <input type="submit" id="saveData" name="signup_submit" value="Remove" />
+  </div>
+  
+  <div class="right">
+    <span class="loginwith">Sign in with<br />social network</span>
+    
+    <button class="social-signin facebook">Log in with facebook</button>
+    <button class="social-signin twitter">Log in with Twitter</button>
+    <button class="social-signin google">Log in with Google+</button>
+  </div>
+  <div class="or">OR</div>
+</div>
+</body>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+  import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    //****************** add your configaration here *******************//
+  };
+
+    // Initialize Firebase
+     const app = initializeApp(firebaseConfig);
+     const database = getDatabase(app);
+
+    saveData.addEventListener('click',(e) => {
+    var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+
+    set(ref(database, 'users/' + username), {
+
+     username: username,
+     email: email,
+     password : password
+
+     });
+
+    alert('saved');
+    });
+
+    // get data
+    getData.addEventListener('click',(e) => {
+      var username = document.getElementById('username').value;
+
+      const starCountRef = ref(database, 'users/' + username);
+      onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val(); // data = all data on firebse
+      document.getElementById('email').value = data.email;
+    });
+
+    // update data
+    updateData.addEventListener('click',(e) => {
+     var username = document.getElementById('username').value;
+     var email = document.getElementById('email').value;
+
+    // A post entry.
+    const postData = {
+    email: email,
+    username: username, 
+  };
+
+  // Get a key for a new Post.
+  // const newPostKey = push(child(ref(database), 'posts')).key; //get unique id
+
+  // Write the new post's data simultaneously in the posts list and the user's post list.
+  const updates = {};
+  updates['/users/' + username] = postData;
+  // updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+
+  return update(ref(database), updates);
+  });
+
+    // remove data
+    removeData.addEventListener('click',(e) => {
+     var username = document.getElementById('username').value;
+    
+     remove(ref(database, 'users/' + username));
+     alert('removed');
+    });
+
+</script>
+
+</html>
