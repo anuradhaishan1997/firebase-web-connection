@@ -75,23 +75,13 @@
     updateData.addEventListener('click',(e) => {
      var username = document.getElementById('username').value;
      var email = document.getElementById('email').value;
-
-    // A post entry.
-    const postData = {
-    email: email,
-    username: username, 
-  };
-
-  // Get a key for a new Post.
-  // const newPostKey = push(child(ref(database), 'posts')).key; //get unique id
-
-  // Write the new post's data simultaneously in the posts list and the user's post list.
-  const updates = {};
-  updates['/users/' + username] = postData;
-  // updates['/user-posts/' + uid + '/' + newPostKey] = postData;
-
-  return update(ref(database), updates);
-  });
+      
+    update(ref(database, 'users/' + username),{
+      email: email,
+      username: username, 
+      })
+      alert('updated');
+    });
 
     // remove data
     removeData.addEventListener('click',(e) => {
